@@ -153,15 +153,19 @@ public class MainActivity extends AppCompatActivity {
                             URL playStoreUrl = null;
                             try {
                                 playStoreUrl = new URL(getString(R.string.play_store_link));
+                                // Transition this to being done with App Cards
+                                TweetComposer.Builder builder = new TweetComposer.Builder(MainActivity.this)
+                                        .text("\"We need to " + mPhrase + "\" - Created with the BS Generator App.")
+                                        .url(playStoreUrl);
+                                builder.show();
                             } catch (MalformedURLException e) {
                                 Toast.makeText(MainActivity.this, "There was an error creating the Tweet", Toast.LENGTH_LONG).show();
                                 e.printStackTrace();
+                            } catch (NullPointerException npe) {
+                                Toast.makeText(MainActivity.this, "There was an error creating the Tweet", Toast.LENGTH_LONG).show();
+                                npe.printStackTrace();
                             }
-                            // Transition this to being done with App Cards
-                            TweetComposer.Builder builder = new TweetComposer.Builder(MainActivity.this)
-                                    .text("\"We need to " + mPhrase + "\" - Created with the BS Generator App.")
-                                    .url(playStoreUrl);
-                            builder.show();
+
 
                             return true;
                         case R.id.share_facebook:
@@ -169,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                                     .setContentUrl(Uri.parse(getString(R.string.play_store_link)))
                                     .setQuote("\"We need to " + mPhrase + "\"")
                                     .setContentTitle("Created with the BS Generator app")
+                                    .setContentDescription("Need a quick BS phrase for your next corporate meeting or email? Quickly generate it with BS generator! BS generator makes it easy to create and share buzz-wordy phrases.")
                                     .build();
                             mShareDialog.show(content);
                             return true;
