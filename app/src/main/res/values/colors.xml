@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#00892d</color>
     <color name="colorAccent">#542f9e</color>
     <color name="colorBackground">#00892d</color>
-    <color name="colorLightGray">#ffdddddd</color>
+    <color name="colorLightGray">#dddddd</color>
+    <color name="scrollbar">#80ffffff</color>
 </resources>

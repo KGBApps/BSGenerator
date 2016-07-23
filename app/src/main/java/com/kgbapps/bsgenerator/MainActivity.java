@@ -1,5 +1,7 @@
 package com.kgbapps.bsgenerator;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,18 +29,26 @@ import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HistoryListFragment.FragmentCloseCallBack, HistoryListFragment.GetHistoryCallBack, HistoryListFragment.PhraseClickCallBack {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView mPhraseTextView;
     private TextView mBasedOnTextView;
+    private TextView mIntroTextView;
     private Button mGenerateButton;
     private Button mResetButton;
     private Button mTweetButton;
+    private Button mHistoryButton;
+    private RelativeLayout mRelativeLayout;
     private WordBook mWordBook;
-    private String mPhrase;
+    private Generator mGenerator;
+    private Phrase mPhrase;
+    private History mHistory;
     private boolean hasPhrase;
 
     private ShareDialog mShareDialog;
@@ -57,16 +68,20 @@ public class MainActivity extends AppCompatActivity {
         mGenerateButton = (Button) findViewById(R.id.generateButton);
 //        mResetButton = (Button) findViewById(R.id.resetButton);
         mTweetButton = (Button) findViewById(R.id.tweetButton);
+        mHistoryButton = (Button) findViewById(R.id.historyButton);
+        mIntroTextView = (TextView) findViewById(R.id.textView2);
 
         mWordBook = new WordBook(this);
+        mGenerator = new Generator(mWordBook);
+        mHistory = new History();
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(Constants.TWITTER_KEY, Constants.TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig), new TweetComposer());
 
         // Reset to default view
-        resetPhrase();
-
-        mPhrase = "";
+//        resetPhrase();
+        mPhrase = new Phrase("We need to", mGenerator.generatePhrase());
+        handleNewPhrase(mPhrase);
 
 //        mResetButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -79,12 +94,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                mTweetButton.setVisibility(View.VISIBLE);
-                setPhraseTextView(
-                        mWordBook.getRandomAdverb(),
-                        mWordBook.getRandomVerb(),
-                        mWordBook.getRandomAdjective(),
-                        mWordBook.getRandomNoun()
-                );
+                mPhrase = new Phrase("We need to", mGenerator.generatePhrase());
+                handleNewPhrase(mPhrase);
             }
         });
 
@@ -110,6 +121,55 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(MainActivity.this, mHistory.getHistory().getFirst().getLongPhrase(), Toast.LENGTH_LONG).show();
+                HistoryListFragment fragment = new HistoryListFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down, R.anim.slide_in_up, R.anim.slide_out_down)
+                        .addToBackStack("HistoryList")
+                        .add(R.id.fragmentContainer, fragment, "HistoryList")
+                        .commit();
+                setButtonsClickable(false);
+            }
+        });
+
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.clickContainer);
+        mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentClosed();
+            }
+        });
+        mRelativeLayout.setClickable(false);
+    }
+
+    private void handleNewPhrase(Phrase phrase) {
+        mHistory.addPhrase(phrase);
+        setPhraseTextView(phrase);
+    }
+
+    private void removeFragment(android.support.v4.app.Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down, R.anim.slide_in_up, R.anim.slide_out_down)
+                    .remove(fragment)
+                    .commit();
+        }
+    }
+
+    private void setButtonsClickable(boolean b) {
+        mHistoryButton.setClickable(b);
+        mGenerateButton.setClickable(b);
+        mBasedOnTextView.setClickable(b);
+        mTweetButton.setClickable(b);
+        if (b) {
+            mRelativeLayout.setClickable(false);
+        } else {
+            mRelativeLayout.setClickable(true);
+        }
     }
 
     private void resetPhrase() {
@@ -125,12 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setPhraseTextView(String adverb, String verb, String adjective, String noun) {
         hasPhrase = true;
-        mPhrase = String.format("%s %s %s %s.",
-                adverb,
-                verb,
-                adjective,
-                noun
-        );
+//        mPhrase = String.format("%s %s %s %s.",
+//                adverb,
+//                verb,
+//                adjective,
+//                noun
+//        );
         mPhraseTextView.setText(String.format("%s %s %s %s.",
                 adverb,
                 verb,
@@ -138,6 +198,12 @@ public class MainActivity extends AppCompatActivity {
                 noun
         ));
     }
+
+    private void setPhraseTextView(Phrase phrase) {
+        hasPhrase = true;
+        mPhraseTextView.setText(phrase.toString());
+    }
+
 
     public void showSharePopup(View v) {
         if (!hasPhrase) {
@@ -155,15 +221,12 @@ public class MainActivity extends AppCompatActivity {
                                 playStoreUrl = new URL(getString(R.string.play_store_link));
                                 // Transition this to being done with App Cards
                                 TweetComposer.Builder builder = new TweetComposer.Builder(MainActivity.this)
-                                        .text("\"We need to " + mPhrase + "\" - Created with the BS Generator App.")
+                                        .text("\"We need to " + mPhrase + "\" @kgb_apps")
                                         .url(playStoreUrl);
                                 builder.show();
-                            } catch (MalformedURLException e) {
+                            } catch (MalformedURLException | NullPointerException e) {
                                 Toast.makeText(MainActivity.this, "There was an error creating the Tweet", Toast.LENGTH_LONG).show();
                                 e.printStackTrace();
-                            } catch (NullPointerException npe) {
-                                Toast.makeText(MainActivity.this, "There was an error creating the Tweet", Toast.LENGTH_LONG).show();
-                                npe.printStackTrace();
                             }
 
 
@@ -195,4 +258,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void fragmentClosed() {
+        setButtonsClickable(true);
+        android.support.v4.app.Fragment fragment = getSupportFragmentManager().findFragmentByTag("HistoryList");
+        removeFragment(fragment);
+    }
+
+    @Override
+    public History getHistory() {
+        return mHistory;
+    }
+
+    @Override
+    public void phraseClick(Phrase phrase) {
+        mHistory.removePhrase(phrase);
+        mPhrase = phrase;
+        handleNewPhrase(mPhrase);
+        fragmentClosed();
+    }
 }

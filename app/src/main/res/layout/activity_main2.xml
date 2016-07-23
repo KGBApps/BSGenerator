@@ -4,114 +4,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.kgbapps.bsgenerator.MainActivity"
     android:background="@color/colorBackground"
-    >
+    android:id="@+id/mainLayoutContainer">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="holisticly leverage existing ethical quality vectors."
-        android:lineSpacingMultiplier="1.1"
-        android:id="@+id/phraseTextView"
-        android:textColor="@android:color/white"
-        android:gravity="left"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:textSize="30sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="We need to"
-        android:id="@+id/textView2"
-        android:textColor="@color/colorLightGray"
-        android:layout_above="@+id/phraseTextView"
-        android:layout_alignParentStart="true"
-        android:singleLine="false"
-        android:textSize="30sp"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reset Phrase"
-        android:id="@+id/resetButton"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/colorBackground"
-        android:visibility="gone"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Based on Tommy Butler&apos;s BS Generator"
-        android:id="@+id/basedOnTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"/>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout02"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:weightSum="2"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="4dp"
-        android:paddingLeft="4dp">
+        android:layout_height="fill_parent"
+        android:id="@+id/clickContainer">
+    </RelativeLayout>
 
-        <FrameLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        >
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:weightSum="3"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="4dp"
+            android:paddingLeft="4dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:background="#00ffffff"
+                    android:id="@+id/generateButton"/>
+
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_refresh_white_48dp"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:background="#00ffffff"
+                    android:id="@+id/historyButton"/>
+
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_history_white_48dp"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1">
+
+                <Button
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:background="#00ffffff"
+                    android:id="@+id/tweetButton"
+                    android:onClick="showSharePopup"/>
+
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_share_white_48dp"
+                    android:alpha="100"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="holisticly leverage existing ethical quality vectors."
+            android:lineSpacingMultiplier="1.1"
+            android:id="@+id/phraseTextView"
+            android:textColor="@android:color/white"
+            android:gravity="left"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:textSize="30sp"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="We need to"
+            android:id="@+id/textView2"
+            android:textColor="@color/colorLightGray"
+            android:layout_above="@+id/phraseTextView"
+            android:layout_alignParentStart="true"
+            android:singleLine="false"
+            android:textSize="30sp"/>
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:background="#00ffffff"
-                android:id="@+id/generateButton"/>
-
-            <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_refresh_white_48dp"/>
-        </FrameLayout>
-
-        <FrameLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Based on Tommy Butler&apos;s BS Generator"
+            android:id="@+id/basedOnTextView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
 
-            <Button
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:background="#00ffffff"
-                android:id="@+id/tweetButton"
-                android:onClick="showSharePopup"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset Phrase"
+            android:id="@+id/resetButton"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorBackground"
+            android:visibility="gone"/>
 
-            <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_share_white_48dp"
-                android:alpha="100"/>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragmentContainer"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/textView2">
         </FrameLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

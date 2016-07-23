@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.kgbapps.bsgenerator.HistoryListFragment"
+             android:scrollIndicators="right"
+             android:background="@color/colorBackground">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_gravity="top|center_horizontal"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar"
+        android:scrollbarSize="4dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phrases will appear here"
+        android:id="@+id/empty"
+        android:textSize="25sp"
+        android:textColor="@color/colorLightGray"
+        android:layout_gravity="center"
+        android:textStyle="italic"/>
+</FrameLayout>
